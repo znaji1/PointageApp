@@ -1,0 +1,30 @@
+.MuiDataGrid-columnHeaders{
+	background-color: rgba(122,29,40,255);
+	
+}
+.MuiDataGrid-columnHeaderTitle{
+	font-family: Georgia;
+	color: white;
+}
+.MuiDataGrid-footerContainer {
+	background-color: rgba(122,29,40,255);
+	
+}
+.MuiTablePagination-displayedRows{
+	font-family: Georgia;
+	color: white;
+}
+.MuiToolbar-gutters{
+	font-family: Georgia;
+	color: white;
+}
+
+.MuiTablePagination-toolbar{
+	font-family: Georgia;
+	color: white;
+}
+.MuiDataGrid-virtualScrollerRenderZone{
+    background-color: rgba(247,246,242,255);
+    font-family: Georgia;
+	color: black;
+}
