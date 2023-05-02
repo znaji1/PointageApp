@@ -181,12 +181,14 @@ function Consultasion() {
         - Traitement des dossiers -{" "}
       </div>
       <div>
-        <img
-          src={DocLogo}
-          alt="DocLogo"
-          style={{ height: 89, right: "3pc", paddingLeft: "2pc" }}
-          size={40}
-        />
+        <a href="/consultation">
+          <img
+            src={DocLogo}
+            alt="DocLogo"
+            style={{ height: 89, right: "3pc", paddingLeft: "2pc" }}
+            size={40}
+          />
+        </a>
 
         <Button
           type="button"

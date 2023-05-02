@@ -161,12 +161,14 @@ function Pointage() {
         - Pointage des dossiers -{" "}
       </div>
       <div>
-        <img
-          src={DocLogo}
-          alt="DocLogo"
-          style={{ height: 89, right: "3pc", paddingLeft: "2pc" }}
-          size={40}
-        />
+        <a href="/consultation">
+          <img
+            src={DocLogo}
+            alt="DocLogo"
+            style={{ height: 89, right: "3pc", paddingLeft: "2pc" }}
+            size={40}
+          />
+        </a>
       </div>
       <div className="container-1">
         <img

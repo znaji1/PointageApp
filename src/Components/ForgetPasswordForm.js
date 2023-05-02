@@ -40,11 +40,7 @@ const ForgetPasswordForm = () => {
               alignItems: "center",
             }}
           >
-            <img
-              src={DocLogo}
-              alt="DocLogo"
-              style={{ width: 120, height: 110 }}
-            />
+            <img src={DocLogo} alt="DocLogo" style={{ height: 110 }} />
 
             <Box
               component="form"
@@ -70,7 +66,7 @@ const ForgetPasswordForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                style={{ color: "black", backgroundColor: "red" }}
+                style={{ color: "white", backgroundColor: "red" }}
               >
                 Reset password
               </Button>
