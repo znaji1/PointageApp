@@ -1,49 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
-
-*{
-  font-family: 'Poppins', sans-serif;
-  margin:0; padding:0;
+* {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  outline: none; border:none;
+  outline: none;
+  border: none;
   text-transform: capitalize;
-  transition: all .2s linear;
+  transition: all 0.2s linear;
 }
 
-
-.container-1{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding:25px;
-    min-height: 100vh;
-    background: rgba(247,246,242,255);
+/* Media query for screens smaller than 768px */
+@media screen and (max-width: 767px) {
+  /* Reduce the width of the form and center it */
+  .container-1 form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
   }
-  .container-1 form{
-    padding:20px;
-    width:700px;
-    height: 400px;
-    background: rgba(247,246,242,255);
 
+  /* Make each column take up the full width on smaller screens */
+  .container-1 form .row .col {
+    flex: 1 1 100%;
   }
-  .container-1 form .row{
-    display: flex;
-    flex-wrap: wrap;
-    gap:15px;
-  }
-  .container-1 form .row .col{
-    flex:1 1 250px;
-  }
-  
-  .container-2{
-    display: flex;
-    justify-content: center;
-    padding:25px;
-    min-height: 60vh;
-    margin-top:11pc;
-    background: rgba(247,246,242,255);
-  }
-  
+}
 
+/* Media query for screens between 768px and 1024px */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  /* Reduce the width of the form */
+  .container-1 form {
+    width: 80%;
+    max-width: 600px;
+  }
+}
 
+.container-1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: rgba(247, 246, 242, 255);
+}
 
+.container-1 form .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.container-1 form .row .col {
+  flex: 1 1 250px;
+}
+
+.container-2 {
+  display: flex;
+  justify-content: center;
+  min-height: 60vh;
+  margin-top: -29pc;
+  background: rgba(247, 246, 242, 255);
+}

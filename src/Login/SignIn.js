@@ -81,11 +81,7 @@ function SignIn() {
             alignItems: "center",
           }}
         >
-          <img
-            src={DocLogo}
-            alt="DocLogo"
-            style={{ width: 120, height: 110 }}
-          />
+          <img src={DocLogo} alt="DocLogo" style={{ height: 110 }} />
 
           <Box component="form" onSubmit={login} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -122,13 +118,17 @@ function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              style={{ color: "black", backgroundColor: "red" }}
+              style={{ color: "white", backgroundColor: "red" }}
             >
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2" style={{ color: "black" }}>
+                <Link
+                  href="/forgetPass"
+                  variant="body2"
+                  style={{ color: "black" }}
+                >
                   Forgot password?
                 </Link>
               </Grid>

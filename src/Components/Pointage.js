@@ -8,7 +8,8 @@ import { BsFillArrowLeftCircleFill } from "react-icons/bs";
 import { showError, showSuccess, showInfo } from "../Components/Notifications";
 import Grid from "@mui/material/Grid";
 import axios from "axios";
-
+import Duchette from "../Images/duchette.png";
+import DocLogo from "../../src/Images/DocLogo.png";
 const columns = [
   { field: "numAffaire", headerName: "N. d'affaire", width: 130 },
   {
@@ -23,7 +24,7 @@ const columns = [
     width: 150,
     valueGetter: ({ value }) => value || "N/A",
   },
-  
+
   { field: "Etat", headerName: "État", width: 150 },
 ];
 
@@ -37,6 +38,9 @@ function Pointage() {
   const [loading, setLoading] = useState(true);
   const [newData, setNewData] = useState([]);
   const [numPointe, setNumPointe] = useState("");
+  const [datePointage, setDatePointage] = useState(
+    new Date().toISOString().substr(0, 10)
+  );
   console.log(numPointe);
   const postData = async () => {
     const savedUsername = localStorage.getItem("userName");
@@ -60,12 +64,10 @@ function Pointage() {
 
   const fetchData = async () => {
     try {
-      setLoading(true);
       const response = await fetch("http://localhost:5000/getDossiersPoint");
       const dataDe = await response.json();
       setDataDe(dataDe);
       setNewData(dataDe);
-      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -94,8 +96,9 @@ function Pointage() {
       .then((response) => response.json())
       .then((data) => setData(data))
       .catch((error) => console.log(error))
-      .finally(setLoading(false));
+      .finally(() => setLoading(false));
   }, []);
+
   useEffect(() => {
     fetch("http://localhost:5000/getNumAffaires")
       .then((response) => response.json())
@@ -120,117 +123,123 @@ function Pointage() {
     loadData();
   }, []);
 
-  const [datePointage, setDatePointage] = useState(
-    new Date().toISOString().substr(0, 10)
-  );
-
   const handleDateChange = (event) => {
     setDatePointage(event.target.value);
   };
 
-  let affaireNumber = "";
-  for (let i = 0; i < data.length; i++) {
-    affaireNumber += data[i].numAffaire;
-  }
-
-  const handleNumContenaurKeyDown = (event) => {
+  const handleNumContenaurKeyDown = async (event) => {
     if (event.key === "Tab" && numAffaire) {
-      for (let i = 0; i < numPointe.length; i++) {
-        if (numPointe[i].numAffaire === numAffaire) {
-          break;
-        }
+      const dossierDejaPointe = data.some((d) => d.numAffaire === numAffaire);
+      if (dossierDejaPointe) {
+        showError("Dossier déjà pointé ou incorrect");
+        return;
       }
-      if (!affaireNumber.includes(numAffaire)) {
-        showError(`Dossier déjà pointé ou inccorect `);
-      } else {
-        showSuccess(`Dossier pointé avec succès`);
-        postData();
-        handleInputBlur();
-        loadData();
+      try {
+        await postData();
+        await loadData();
+        setNumAffaire("");
+        showSuccess("Dossier pointé avec succès");
+      } catch (error) {
+        console.error(error);
+        showError("Erreur lors de l'enregistrement du pointage");
       }
+      fetchData();
     }
   };
 
   return (
-    <div className="container-1">
-      <div className="nav">
-        <a href="./consultation">
-          <BsFillArrowLeftCircleFill
-            style={{ color: "rgba(122,29,40,255", marginBottom: "30pc" }}
-            size={30}
-          />
-        </a>
+    <div>
+      <div
+        style={{
+          marginLeft: "30pc",
+          marginBottom: -24,
+          color: "#7a1d28",
+          fontStyle: "Franklin Gothic Medium",
+          fontSize: 20,
+        }}
+      >
+        - Pointage des dossiers -{" "}
       </div>
-      <div style={{ marginRight: 67, textAlign: "center" }}></div>
+      <div>
+        <img
+          src={DocLogo}
+          alt="DocLogo"
+          style={{ height: 89, right: "3pc", paddingLeft: "2pc" }}
+          size={40}
+        />
+      </div>
+      <div className="container-1">
+        <img
+          src={Duchette}
+          alt="Duchette"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "67pc",
+            width: 177,
+            height: 162,
+          }}
+        />
 
-      <div ref={navRef} style={{ marginTop: "-20pc", marginBottom: "3pc" }}>
-        <FormGroup>
-          <Col>
+        <div className="nav" style={{ marginInline: "-26pc" }}>
+          <a href="./consultation">
+            <BsFillArrowLeftCircleFill
+              style={{ color: "rgba(122,29,40,255)", marginBottom: "30pc" }}
+              size={30}
+            />
+          </a>
+        </div>
+
+        <div
+          ref={navRef}
+          style={{
+            marginTop: "-34pc",
+            display: "flex",
+            alignItems: "center",
+            marginLeft: "48pc",
+          }}
+        >
+          <div className="span2" style={{ marginRight: "1pc" }}>
             <div>
-              {" "}
               <Label className="control-label">Numero de Conteneur:</Label>
             </div>
             <Input
               name="numContenaur"
               id="numContenaur"
               className="form-control p-2 border-top-0"
-              //value={numContenaur}
-              onChange={(event) => setNumContenaur(event.target.value)}
+              value={numContenaur}
+              onChange={(e) => setNumContenaur(e.target.value)}
               onBlur={handleInputBlur}
+              onKeyDown={handleNumContenaurKeyDown}
               style={{ width: "12pc", height: "27px" }}
             />
-          </Col>
-        </FormGroup>
-
-        <FormGroup>
-          <div>
-            {" "}
-            <Label className="control-label">Numero d'affaire :</Label>
           </div>
-          <Input
-            id="numAffaire"
-            name="numAffaire"
-            onChange={(event) => setNumAffaire(event.target.value)}
-            className="form-control p-2 border-top-0"
-            style={{ width: "12pc", height: "27px" }}
-            // onBlur={postData}
-            onKeyDown={handleNumContenaurKeyDown}
-          >
-            {/* <option value=""></option>
 
-            {affaire.map((option) => (
-              <option key={option.value}>{option.numAffaire}</option>
-            ))} */}
-          </Input>
-        </FormGroup>
+          <div className="span2">
+            <div>
+              <Label className="control-label">Numero d'affaire :</Label>
+            </div>
+            <Input
+              id="numAffaire"
+              name="numAffaire"
+              value={numAffaire}
+              onChange={(event) => setNumAffaire(event.target.value)}
+              className="form-control p-2 border-top-0"
+              style={{ width: "12pc", height: "27px" }}
+              // onBlur={postData}
+              onKeyDown={handleNumContenaurKeyDown}
+            >
+              {/* <option value=""></option>
 
-        <FormGroup>
-          <div>
-            {" "}
-            {/* <Label className="control-label" >Date de pointage :</Label> */}
+  {affaire.map((option) => (
+    <option key={option.value}>{option.numAffaire}</option>
+  ))} */}
+            </Input>
           </div>
-          <Input
-            name="datePointage"
-            id="datePointage"
-            className="form-control p-2 border-top-0"
-            format="MM/dd/yyyy"
-            type="date"
-            variant="outlined"
-            required
-            value={datePointage}
-            onChange={handleDateChange}
-            readOnly={true}
-            hidden
-          />
-        </FormGroup>
+        </div>
       </div>
-
       <div className="container-2">
-        <Grid
-          container
-          spacing={2}
-          style={{ marginLeft: "-307px", width: "78pc" }}
-        >
+        <Grid container spacing={2} className="grid-container">
           <Grid item xs={6}>
             {loading ? (
               <p>Loading data...</p>
@@ -270,8 +279,6 @@ function Pointage() {
                     },
                   },
                 }}
-                pageSizeOptions={[5]}
-                disableRowSelectionOnClick
               />
             )}
           </Grid>

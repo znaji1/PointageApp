@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Pointage from "./Components/Pointage";
 import Consultation from "./Components/Consultasion";
 import Login from "./Login/SignIn";
+import ForgetPasswordForm from "./Components/ForgetPasswordForm";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
             <Route exact path="/" element={<Login />} />
             <Route path="/pointage" element={<Pointage />} />
             <Route path="/consultation" element={<Consultation />} />
+            <Route path="/forgetPass" element={<ForgetPasswordForm />} />
           </Routes>
         </header>
       </div>

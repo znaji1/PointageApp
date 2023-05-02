@@ -11,42 +11,102 @@ import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import "./Table.css";
 import { saveAs } from "file-saver";
+import { Typography } from "@mui/material";
 import ExcelJS from "exceljs";
-const columns = [
-  { field: "numAffaire", headerName: "N. d'affaire", width: 130 },
-  {
-    field: "numContenaur",
-    headerName: "N. de Conteneur",
-    width: 150,
-  },
-  {
-    field: "utilisateur",
-    headerName: "L'utilisateur",
-    width: 150,
-  },
-  {
-    field: "datePointage",
-    headerName: "Date de Pointage",
-    width: 150,
-    type: "date",
-    valueGetter: ({ value }) => value && new Date(value),
-  },
-  { field: "Etat", headerName: "État", width: 150 },
-];
+import moment from "moment";
+import Excel from "../Images/excel.png";
+import Duchette from "../Images/duchette.png";
 
 function Consultasion() {
+  const columns = [
+    { field: "numAffaire", headerName: "N. d'affaire", width: 130 },
+    {
+      field: "numContenaur",
+      headerName: "N. de Conteneur",
+      width: 150,
+    },
+    {
+      field: "utilisateur",
+      headerName: "L'utilisateur",
+      width: 150,
+    },
+    {
+      field: "datePointage",
+      headerName: "Date de Pointage",
+      width: 150,
+      type: "date",
+      valueGetter: ({ value }) => value && new Date(value),
+    },
+    { field: "Etat", headerName: "État", width: 150 },
+  ];
+
+  const [rows, setRows] = useState([]);
+  const rowsWithId = rows.map((row, index) => ({ id: index + 1, ...row }));
+
+  const [datePointageInput, setDatePointageInput] = useState("");
   const [numAffaireInput, setNumAffaireInput] = useState("");
   const [numContenaurInput, setNumContenaurInput] = useState("");
   const [utilisateurInput, setUtilisateurInput] = useState("");
-  const [results, setResults] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
   const navigate = useNavigate();
   const navRef = useRef();
+
+  const handleSearchButtonClick = () => {
+    let filteredRows = rowsWithId;
+    if (datePointageInput) {
+      filteredRows = filteredRows.filter((row) => {
+        const datePointage =
+          moment(row.datePointage).format("MM/DD/YYYY") ===
+          moment(datePointageInput).format("MM/DD/YYYY");
+        return datePointage;
+      });
+    }
+    filteredRows = filteredRows.filter((row) => {
+      const numAffaire =
+        typeof row.numAffaire !== "string"
+          ? row.numAffaire.toString()
+          : row.numAffaire;
+      const numContenaur =
+        typeof row.numContenaur !== "string"
+          ? row.numContenaur.toString()
+          : row.numContenaur;
+      const utilisateur =
+        typeof row.utilisateur !== "string"
+          ? row.utilisateur.toString()
+          : row.utilisateur;
+      return (
+        numAffaire.includes(numAffaireInput) &&
+        numContenaur.includes(numContenaurInput) &&
+        utilisateur.includes(utilisateurInput)
+      );
+    });
+    if (filteredRows.length === 0) {
+      setRows([]);
+    } else {
+      setFilteredRows(filteredRows);
+    }
+  };
+
+  const handleChageNumAffaire = (value) => {
+    setNumAffaireInput(value);
+  };
+
+  const handleChageNumContenaur = (value) => {
+    setNumContenaurInput(value);
+  };
+
+  const handleChageUtilisateurInput = (value) => {
+    setUtilisateurInput(value);
+  };
+
+  const handleChageDateInput = (value) => {
+    setDatePointageInput(value);
+  };
+
   function MyCustomButton() {
     navigate("/pointage");
   }
 
-  const [rows, setRows] = useState([]);
-  const rowsWithId = rows.map((row, index) => ({ id: index + 1, ...row }));
   const fileName = "Sheet";
   const handleExport = () => {
     const workbook = new ExcelJS.Workbook(); // Create a new workbook
@@ -106,52 +166,55 @@ function Consultasion() {
       .then((data) => setRows(data))
       .catch((error) => console.log(error));
   }, []);
-  const fetchData = (numAffaire, numContenaur, utilisateur) => {
-    fetch("http://localhost:5000/getDossier")
-      .then((response) => response.json())
-      .then((json) => {
-        const results = json.filter(() => {
-          return (
-            (numAffaire ? numAffaireInput.includes(numAffaire) : true) &&
-            (numContenaur ? numContenaurInput.includes(numContenaur) : true) &&
-            (utilisateur
-              ? utilisateurInput.toLowerCase().includes(utilisateur)
-              : true)
-          );
-        });
-        setResults(results);
-      })
-      .catch((error) => console.log(error));
-  };
 
-  const handleChageNumAffaire = (value) => {
-    setNumAffaireInput(value);
-    fetchData(value, numContenaurInput, utilisateurInput);
-  };
-
-  const handleChageNumContenaur = (value) => {
-    setNumContenaurInput(value);
-    fetchData(numAffaireInput, value, utilisateurInput);
-  };
-
-  const handleChageUtilisateurInput = (value) => {
-    setUtilisateurInput(value);
-    fetchData(numAffaireInput, numContenaurInput, value);
-  };
   return (
     <div>
+      <div
+        style={{
+          marginLeft: "32pc",
+          marginBottom: -24,
+          color: "#7a1d28",
+          fontStyle: "Franklin Gothic Medium",
+          fontSize: 20,
+        }}
+      >
+        - Traitement des dossiers -{" "}
+      </div>
       <div>
-        <div className="container">
-          <img
-            src={DocLogo}
-            alt="DocLogo"
-            style={{ width: 120, height: 110 }}
-            size={40}
-          />
+        <img
+          src={DocLogo}
+          alt="DocLogo"
+          style={{ height: 89, right: "3pc", paddingLeft: "2pc" }}
+          size={40}
+        />
 
+        <Button
+          type="button"
+          onClick={MyCustomButton}
+          style={{
+            color: "rgba(122,29,40,255)",
+            marginLeft: "70pc",
+            fontSize: "large",
+            marginTop: "-7pc",
+          }}
+        >
+          <img
+            src={Duchette}
+            alt="Duchette"
+            style={{
+              position: "absolute",
+              top: 10,
+              width: 29,
+              left: -25,
+            }}
+          />
+          Pointage
+        </Button>
+        <div className="container" style={{ marginLeft: 217, marginTop: -31 }}>
           <nav ref={navRef}>
             <div>
               <TextField
+                id="numAffaire"
                 name="numAffaire"
                 label="N. d'affaire"
                 variant="outlined"
@@ -213,11 +276,9 @@ function Consultasion() {
               <TextField
                 id="datePointage"
                 name="datePointage"
-                label="Date de Pointage"
-                format="MM/dd/yyyy"
                 type="date"
-                variant="outlined"
-                required
+                value={datePointageInput}
+                onChange={(event) => handleChageDateInput(event.target.value)}
                 InputProps={{
                   style: {
                     width: "90%",
@@ -236,18 +297,11 @@ function Consultasion() {
                 type="button"
                 className="btn  mr-1"
                 style={{ color: "rgba(122,29,40,255)" }}
-                // onClick={handleSearchButtonClick}
+                onClick={handleSearchButtonClick}
               >
                 <BiSearchAlt size={34} />
               </Button>
             </Col>
-            <Button
-              type="button"
-              onClick={MyCustomButton}
-              style={{ color: "rgba(122,29,40,255)" }}
-            >
-              <MdControlPoint style={{ paddingLeft: "3px" }} /> Pointage
-            </Button>
           </nav>
         </div>
       </div>
@@ -260,18 +314,28 @@ function Consultasion() {
           >
             Export to Excel
           </Button>
-          <Button
+          <img
+            src={Excel}
+            alt="excel"
+            style={{
+              position: "absolute",
+              top: 184,
+              width: 19,
+            }}
+          />
+
+          {/* <Button
             type="file"
             onClick={readExcelFile}
             className="btn mr-1"
             style={{ color: "rgba(122,29,40,255" }}
           >
             Import from Excel
-          </Button>
+          </Button> */}
           <DataGrid
-            rows={results.length > 0 ? results : rowsWithId}
+            rows={filteredRows.length > 0 ? filteredRows : rowsWithId}
             columns={columns}
-            pageSize={2}
+            pageSize={filteredRows.length > 0 ? filteredRows.length : 5}
             checkboxSelection
             initialState={{
               pagination: {
