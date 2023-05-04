@@ -37,11 +37,9 @@ function Pointage() {
   const [numAffaire, setNumAffaire] = useState("");
   const [loading, setLoading] = useState(true);
   const [newData, setNewData] = useState([]);
-  const [numPointe, setNumPointe] = useState("");
   const [datePointage, setDatePointage] = useState(
     new Date().toISOString().substr(0, 10)
   );
-  console.log(numPointe);
   const postData = async () => {
     const savedUsername = localStorage.getItem("userName");
     const data = {
@@ -91,21 +89,6 @@ function Pointage() {
   const handleInputBlur = () => {
     handleNumContenaurChange();
   };
-  useEffect(() => {
-    fetch("http://localhost:5000/getDossierNonPointe")
-      .then((response) => response.json())
-      .then((data) => setData(data))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    fetch("http://localhost:5000/getNumAffaires")
-      .then((response) => response.json())
-      .then((numPointe) => setNumPointe(numPointe))
-      .catch((error) => console.log(error))
-      .finally(setLoading(false));
-  }, []);
 
   const loadData = async () => {
     try {
@@ -123,13 +106,9 @@ function Pointage() {
     loadData();
   }, []);
 
-  const handleDateChange = (event) => {
-    setDatePointage(event.target.value);
-  };
-
   const handleNumContenaurKeyDown = async (event) => {
     if (event.key === "Tab" && numAffaire) {
-      const dossierDejaPointe = data.some((d) => d.numAffaire === numAffaire);
+      const dossierDejaPointe = dataDe.some((d) => d.numAffaire === numAffaire);
       if (dossierDejaPointe) {
         showError("Dossier déjà pointé ou incorrect");
         return;
@@ -138,24 +117,27 @@ function Pointage() {
         await postData();
         await loadData();
         setNumAffaire("");
+        fetchData();
         showSuccess("Dossier pointé avec succès");
       } catch (error) {
         console.error(error);
         showError("Erreur lors de l'enregistrement du pointage");
       }
-      fetchData();
     }
   };
 
   return (
     <div>
+      <br></br>
       <div
         style={{
-          marginLeft: "30pc",
-          marginBottom: -24,
-          color: "#7a1d28",
+          marginLeft: "26pc",
+          marginBottom: -27,
+          color: "rgba(208,4,60,255)",
           fontStyle: "Franklin Gothic Medium",
-          fontSize: 20,
+          fontSize: 35,
+          fontFamily: "Signika",
+          fontWeight: 900,
         }}
       >
         - Pointage des dossiers -{" "}
@@ -176,17 +158,16 @@ function Pointage() {
           alt="Duchette"
           style={{
             position: "absolute",
-            top: 0,
+            top: 26,
             left: "67pc",
-            width: 177,
-            height: 162,
+            width: 152,
           }}
         />
 
         <div className="nav" style={{ marginInline: "-26pc" }}>
           <a href="./consultation">
             <BsFillArrowLeftCircleFill
-              style={{ color: "rgba(122,29,40,255)", marginBottom: "30pc" }}
+              style={{ color: "rgba(208,4,60,255)", marginBottom: "30pc" }}
               size={30}
             />
           </a>
@@ -203,7 +184,12 @@ function Pointage() {
         >
           <div className="span2" style={{ marginRight: "1pc" }}>
             <div>
-              <Label className="control-label">Numero de Conteneur:</Label>
+              <Label
+                className="control-label"
+                style={{ color: "rgba(95,92,89,255)", fontWeight: "bold" }}
+              >
+                Numero de Conteneur :
+              </Label>
             </div>
             <Input
               name="numContenaur"
@@ -219,7 +205,12 @@ function Pointage() {
 
           <div className="span2">
             <div>
-              <Label className="control-label">Numero d'affaire :</Label>
+              <Label
+                className="control-label"
+                style={{ color: "rgba(95,92,89,255)", fontWeight: "bold" }}
+              >
+                Numero d'affaire :
+              </Label>
             </div>
             <Input
               id="numAffaire"
@@ -258,7 +249,6 @@ function Pointage() {
                     },
                   },
                 }}
-                pageSizeOptions={[5]}
                 disableRowSelectionOnClick
               />
             )}

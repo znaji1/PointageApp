@@ -169,13 +169,16 @@ function Consultasion() {
 
   return (
     <div>
+      <br></br>
       <div
         style={{
-          marginLeft: "32pc",
-          marginBottom: -24,
-          color: "#7a1d28",
+          marginLeft: "25pc",
+          marginBottom: -27,
+          color: "rgba(208,4,60,255)",
           fontStyle: "Franklin Gothic Medium",
-          fontSize: 20,
+          fontSize: 35,
+          fontFamily: "Signika",
+          fontWeight: 900,
         }}
       >
         - Traitement des dossiers -{" "}
@@ -194,7 +197,7 @@ function Consultasion() {
           type="button"
           onClick={MyCustomButton}
           style={{
-            color: "rgba(122,29,40,255)",
+            color: "rgba(208,4,60,255)",
             marginLeft: "70pc",
             fontSize: "large",
             marginTop: "-7pc",
@@ -298,7 +301,7 @@ function Consultasion() {
               <Button
                 type="button"
                 className="btn  mr-1"
-                style={{ color: "rgba(122,29,40,255)" }}
+                style={{ color: "rgba(208,4,60,255)" }}
                 onClick={handleSearchButtonClick}
               >
                 <BiSearchAlt size={34} />
@@ -312,7 +315,7 @@ function Consultasion() {
           <Button
             onClick={handleExport}
             className="btn mr-1"
-            style={{ color: "rgba(122,29,40,255" }}
+            style={{ color: "rgba(208,4,60,255)" }}
           >
             Export to Excel
           </Button>
@@ -321,7 +324,7 @@ function Consultasion() {
             alt="excel"
             style={{
               position: "absolute",
-              top: 184,
+              top: 217,
               width: 19,
             }}
           />

@@ -9,38 +9,49 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Add the extended option to express.urlencoded()
 
 app.use(cors());
-app.post('/reset-password', async (req, res) => {
+app.post("/reset-password", async (req, res) => {
   const { email } = req.body;
 
   // Generate a unique reset token and save it to the database
 
   // Send an email to the user with the reset link
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
-      user: 'your_email@gmail.com',
-      pass: 'your_email_password',
+      user: "your_email@gmail.com",
+      pass: "your_email_password",
     },
   });
 
   const mailOptions = {
-    from: 'your_email@gmail.com',
+    from: "your_email@gmail.com",
     to: email,
-    subject: 'Reset Your Password',
+    subject: "Reset Your Password",
     text: `Click this link to reset your password: http://your_website.com/reset-password`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
-      res.status(500).send('Error sending email');
+      res.status(500).send("Error sending email");
     } else {
-      console.log('Email sent: ' + info.response);
-      res.status(200).json({ message: 'Password reset link sent to your email' });
+      console.log("Email sent: " + info.response);
+      res
+        .status(200)
+        .json({ message: "Password reset link sent to your email" });
     }
   });
 });
 
+app.get("/getDossierAff/:numAffaire", (req, res) => {
+  const numAffaire = req.params.numAffaire;
+  const dossier = data.find((d) => d.numAffaire === numAffaire);
+  if (dossier) {
+    res.status(200).json(dossier);
+  } else {
+    res.status(404).json({ message: "Dossier non trouvé" });
+  }
+});
 
 app.get("/getUsers", function(req, res) {
   sql.getUsers().then((result) => {
